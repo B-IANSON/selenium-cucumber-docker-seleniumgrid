@@ -1,0 +1,42 @@
+version: '2'
+services:
+  hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
+      
+  chrome_node:
+    image: selenium/node-chrome
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+      
+  firefox_node:
+    image: selenium/node-firefox
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+      
+  chrome_test:
+    image: maven:slim
+    volumes:
+    - ./:/usr/src/mvn-src
+    - ./docker-chrome-target:/usr/src/mvn-src/target
+    - /root/.m2/:/root/.m2/
+    depends_on:
+      - chrome_node
+    working_dir: /usr/src/mvn-src
+    command: mvn test -Dbrowser=chrome -Dgrid=true -Dparallel=both
+    
+  firefox_test:
+    image: maven:slim
+    volumes:
+    - ./:/usr/src/mvn-src
+    - ./docker-firefox-target:/usr/src/mvn-src/target
+    - /root/.m2/:/root/.m2/
+    depends_on:
+      - firefox_node
+    working_dir: /usr/src/mvn-src
+    command: mvn test -Dbrowser=firefox -Dgrid=true -Dparallel=both
