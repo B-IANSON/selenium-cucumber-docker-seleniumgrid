@@ -70,12 +70,14 @@ There are a number of different browser options:
 
 
 _Dparallel_
+
 Tests can be executed in parallel by providing the following property:
 
 
 `-Dparallel=both`
 
 _Dcucumber.options_
+
 Specific groups of Cucumber features/scenarios can be executed by providing the tag name within this property - For example: 
 
 
